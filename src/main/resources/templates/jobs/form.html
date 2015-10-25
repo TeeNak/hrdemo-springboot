@@ -1,0 +1,86 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+<head>
+    <title th:text="${job.jobId} != null ? 'Jobs : Edit' : 'Jobs : Create'">Jobs : Edit</title>
+</head>
+<body>
+<h1 layout:fragment="header"
+    th:text="${job.jobId} != null ? 'Jobs : Edit' : 'Jobs : Create'">Jobs : Edit</h1>
+
+<div layout:fragment="content"
+     class="container">
+    <div class="alert alert-success"
+         th:if="${globalMessage}"
+         th:text="${globalMessage}">
+        Some Success message
+    </div>
+    <div class="pull-right">
+        <a th:href="@{/}" href="list.html">
+            Jobs
+        </a>
+    </div>
+    <div class="col-sm-12"/>
+    <form class="form-horizontal"
+          id="jobForm"
+          th:action="@{'/secure/job/' + ${job.jobId != null ? job.jobId : 'new' }}"
+          th:object="${job}"
+          action="#"
+          method="post">
+        <div th:if="${#fields.hasErrors('*')}"
+             class="col-sm-12 alert alert-danger">
+            <p th:each="error : ${#fields.errors('*')}"
+               th:text="${error}">
+                Validation error
+            </p>
+        </div>
+        <div class="form-group"
+                th:if="${job.jobId} != null" >
+            <label class="col-sm-2 control-label">Job ID</label>
+            <div class="col-sm-10">
+                <p class="form-control-static"
+                   th:text="*{jobId}">123</p>
+                <input
+                        id="jobId"
+                        hidden=""
+                        th:field="*{jobId}" />
+            </div>
+        </div>
+        <div class="form-group"
+             th:classappend="${#fields.hasErrors('code')} ? 'has-error'">
+            <label class="col-sm-2 control-label">Code</label>
+            <div class="col-sm-10">
+                <input class="form-control"
+                       id="code"
+                       th:field="*{code}" />
+                <div class="help-block with-errors"
+                     th:if="${#fields.hasErrors('code')}" th:errors="*{code}">error message</div>
+            </div>
+        </div>
+        <div class="form-group"
+             th:classappend="${#fields.hasErrors('name')} ? 'has-error'">
+            <label class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+                <input class="form-control"
+                       id="name"
+                       th:field="*{name}" />
+                <div class="help-block with-errors"
+                     th:if="${#fields.hasErrors('name')}" th:errors="*{name}">error message</div>
+            </div>
+        </div>
+        <input
+                th:if="${job.jobId} != null"
+                id="version"
+                hidden=""
+                th:field="*{version}" />
+        <div class="form-actions">
+            <div class="col-sm-2"/>
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-primary"
+                        th:text="${job.jobId} != null ? 'Update' : 'Create'">Update</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

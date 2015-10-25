@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+<head>
+    <title>Jobs : View all</title>
+</head>
+<body>
+<h1 layout:fragment="header">Jobs : View all</h1>
+
+<div layout:fragment="content" class="container">
+    <div class="pull-right">
+        <a href="form.html" th:href="@{/secure/job/new}">Create New Job</a>
+    </div>
+    <table class="table table-hover table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Job ID</th>
+            <th>Code</th>
+            <th>Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${jobs.empty}">
+            <td colspan="3">
+                No jobs
+            </td>
+        </tr>
+        <tr th:each="job : ${jobs}">
+            <td th:text="${job.jobId}">1</td>
+            <td th:text="${job.code}">
+                JOB1001
+            </td>
+            <td>
+                <a href="view.html"
+                   th:href="@{'/secure/job/' + ${job.jobId}}"
+                   th:text="${job.name}">
+                    job name
+                </a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
