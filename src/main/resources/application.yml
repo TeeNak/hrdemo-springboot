@@ -32,8 +32,8 @@ spring:
     password:
 
     # initialization
-    #schema: schema.sql
-    #data: data.sql
+    #schema: "classpath*:schema.sql"
+    #data: "classpath*:data.sql"
 
 # to avoid initialization done by hibernate
   jpa.hibernate.ddl-auto: none

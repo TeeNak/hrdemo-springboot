@@ -4,6 +4,7 @@ import com.github.teenak77.hrdemo.exception.ResourceNotFoundException;
 import com.github.teenak77.hrdemo.model.domain.Job;
 import com.github.teenak77.hrdemo.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -72,7 +73,12 @@ public class JobController {
         if (result.hasErrors()) {
             return new ModelAndView("jobs/form", "formErrors", result.getAllErrors());
         }
-        this.jobService.updateOne(job);
+        try {
+            this.jobService.updateOne(job);
+        } catch (ObjectOptimisticLockingFailureException e) {
+            result.rejectValue("version","error.optimisticLock",null,"The object you are trying to save was changed by another user. Please refresh data.");
+            return new ModelAndView("jobs/form", "formErrors", result.getAllErrors());
+        }
         redirect.addFlashAttribute("globalMessage", "Successfully updated the job");
         return new ModelAndView("redirect:/secure/job/{job.jobId}", "job.jobId", job.getJobId());
 
